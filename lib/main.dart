@@ -194,6 +194,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SuccessScreen()));
                 }
               },
               child: const Text('Submit'),
@@ -202,5 +204,19 @@ class MyCustomFormState extends State<MyCustomForm> {
         ],
       ),
     );
+  }
+}
+
+class SuccessScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Success'),
+        ),
+        body: const Center(
+            child: Text(
+          'Form submitted successfully!',
+        )));
   }
 }
