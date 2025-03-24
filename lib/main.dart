@@ -41,6 +41,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  DateTime date = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     return Form(
       key: _formKey,
       child: Column(
+        spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -94,50 +96,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
             ],
-          Row(
-            spacing: 20,
-            children: [
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    label: Text('Email'),
-                    border: OutlineInputBorder(),
-                  ),
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else if (!value.contains("@") || !value.contains('.')) {
-                      return 'Please enter valid email';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    label: Text('Contact No.'),
-                    border: OutlineInputBorder(),
-                    hintText: 'xxx-xxx-xxxx'
-                  ),
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    const pattern = r'^[1-9]\d{2}-\d{3}-\d{4}';
-                    final regex = RegExp(pattern);
-                
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else if (!regex.hasMatch(value)) {
-                      return 'Please enter valid phone number';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ],
           ),
           Row(
             spacing: 20,
@@ -164,19 +122,71 @@ class MyCustomFormState extends State<MyCustomForm> {
                 width: 200,
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    label: Text('Contact No.'),
-                    border: OutlineInputBorder(),
-                    hintText: 'xxx-xxx-xxxx'
-                  ),
+                      label: Text('Contact No.'),
+                      border: OutlineInputBorder(),
+                      hintText: 'xxx-xxx-xxxx'),
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     const pattern = r'^[1-9]\d{2}-\d{3}-\d{4}';
                     final regex = RegExp(pattern);
-                
+
                     if (value == null || value.isEmpty) {
                       return 'Please enter some text';
                     } else if (!regex.hasMatch(value)) {
                       return 'Please enter valid phone number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 20,
+            children: [
+              Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: Colors.grey),
+                ),
+                constraints: const BoxConstraints(maxWidth: 200),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(children: [
+                    Text(date.toIso8601String().split('T')[0]),
+                    IconButton(
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: date,
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2100),
+                        );
+                        if (pickedDate != null && pickedDate != date) {
+                          setState(() {
+                            date = pickedDate;
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.calendar_month_outlined),
+                    ),
+                  ]),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Password'),
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
                     }
                     return null;
                   },
