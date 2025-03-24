@@ -42,6 +42,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   DateTime date = DateTime.now();
+  final TextEditingController _dateController = TextEditingController(text: DateTime.now().toIso8601String().split('T')[0]);
 
   @override
   Widget build(BuildContext context) {
@@ -100,34 +101,22 @@ class MyCustomFormState extends State<MyCustomForm> {
           Row(
             spacing: 20,
             children: [
-              Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: Colors.grey),
-                ),
-                constraints: const BoxConstraints(maxWidth: 200),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(children: [
-                    Text(date.toIso8601String().split('T')[0]),
-                    IconButton(
-                      onPressed: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: date,
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(2100),
-                        );
-                        if (pickedDate != null && pickedDate != date) {
-                          setState(() {
-                            date = pickedDate;
-                          });
-                        }
-                      },
-                      icon: const Icon(Icons.calendar_month_outlined),
-                    ),
-                  ]),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Email'),
+                    border: OutlineInputBorder(),
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (!value.contains("@") || !value.contains('.')) {
+                      return 'Please enter valid email';
+                    }
+                    return null;
+                  },
                 ),
               ),
               SizedBox(
@@ -139,9 +128,57 @@ class MyCustomFormState extends State<MyCustomForm> {
                       hintText: 'xxx-xxx-xxxx'),
                   // The validator receives the text that the user has entered.
                   validator: (value) {
-                    const pattern = r'^[1-9]\d{2}-\d{3}-\d{4}';
+                    const pattern = r'^[1-9]\d{2}-\d{3}-\d{4}$';
                     final regex = RegExp(pattern);
 
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (!regex.hasMatch(value)) {
+                      return 'Please enter valid phone number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 20,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  controller: _dateController,
+                  decoration: const InputDecoration(
+                    label: Text('Date of Birth'),
+                    border: OutlineInputBorder(),
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: date,
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime(2100),
+                    );
+                    if (pickedDate != null && pickedDate != date) {
+                      setState(() {
+                        date = pickedDate;
+                        _dateController.text = date.toIso8601String().split('T')[0]; 
+                      });
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Password'),
+                    border: OutlineInputBorder(),
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a password';
                     } else if (value.length < 6) {
@@ -152,36 +189,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
             ],
-          ),
-          Container(
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.grey),
-            ),
-            constraints: const BoxConstraints(maxWidth: 200),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(children: [
-                Text(date.toIso8601String().split('T')[0]),
-                IconButton(
-                  onPressed: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: date,
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2100),
-                    );
-                    if (pickedDate != null && pickedDate != date) {
-                      setState(() {
-                        date = pickedDate;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.calendar_month_outlined),
-                ),
-              ]),
-            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -194,8 +201,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SuccessScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SuccessScreen()),
+                  );
                 }
               },
               child: const Text('Submit'),
@@ -208,15 +217,20 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class SuccessScreen extends StatelessWidget {
+  const SuccessScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Success'),
+      appBar: AppBar(
+        title: const Text('Success'),
+      ),
+      body: const Center(
+        child: Text(
+          'Form Submitted Successfully!',
+          style: TextStyle(fontSize: 24),
         ),
-        body: const Center(
-            child: Text(
-          'Form submitted successfully!',
-        )));
+      ),
+    );
   }
 }
