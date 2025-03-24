@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(const MyApp());
 
@@ -49,6 +50,50 @@ class MyCustomFormState extends State<MyCustomForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            spacing: 20,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('First'),
+                    border: OutlineInputBorder(),
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp('[a-zA-Z]')), // Only allows letters
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Last'),
+                    border: OutlineInputBorder(),
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp('[a-zA-Z]')), // Only allows letters
+                  ],
+                ),
+              ),
+            ],
           Row(
             spacing: 20,
             children: [
