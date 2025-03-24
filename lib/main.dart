@@ -49,14 +49,95 @@ class MyCustomFormState extends State<MyCustomForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+          Row(
+            spacing: 20,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Email'),
+                    border: OutlineInputBorder(),
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (!value.contains("@") || !value.contains('.')) {
+                      return 'Please enter valid email';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Contact No.'),
+                    border: OutlineInputBorder(),
+                    hintText: 'xxx-xxx-xxxx'
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    const pattern = r'^[1-9]\d{2}-\d{3}-\d{4}';
+                    final regex = RegExp(pattern);
+                
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (!regex.hasMatch(value)) {
+                      return 'Please enter valid phone number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 20,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Email'),
+                    border: OutlineInputBorder(),
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (!value.contains("@") || !value.contains('.')) {
+                      return 'Please enter valid email';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Contact No.'),
+                    border: OutlineInputBorder(),
+                    hintText: 'xxx-xxx-xxxx'
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    const pattern = r'^[1-9]\d{2}-\d{3}-\d{4}';
+                    final regex = RegExp(pattern);
+                
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (!regex.hasMatch(value)) {
+                      return 'Please enter valid phone number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
